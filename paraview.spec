@@ -15,7 +15,7 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 2
+Release:        %mkrel 3
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
