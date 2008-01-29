@@ -30,6 +30,7 @@ Patch3:         paraview-3.2.1-doc.patch
 Patch4:         paraview-3.2.1-assistant-qt4.patch
 Patch5:         paraview-3.2.1-make.patch
 Patch6:		paraview-3.2.1-glxext_legacy.patch
+Patch7:		paraview-3.2.1-qt43.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires:  cmake
 %if %{build_mpi}
@@ -149,6 +150,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch4 -p1 -b .assistant-qt4
 %patch5 -p0 -b .make
 %patch6 -p1 -b .glxext
+%patch7 -p1 -b .qt43
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
