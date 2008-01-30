@@ -288,7 +288,7 @@ Type=Application
 Terminal=false
 Icon=paraview
 MimeType=application/x-paraview;
-Categories=Application;Graphics;
+Categories=Graphics;Science;Math
 Exec=mpirun C paraview-mpi
 EOF
 
@@ -337,7 +337,7 @@ Type=Application
 Terminal=false
 Icon=paraview
 MimeType=application/x-paraview;
-Categories=Graphics;Sciences;Math;
+Categories=Graphics;Science;Math;
 Exec=paraview
 EOF
 
