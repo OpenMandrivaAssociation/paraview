@@ -32,7 +32,11 @@ Patch5:         paraview-3.2.1-make.patch
 Patch6:		paraview-3.2.1-glxext_legacy.patch
 Patch7:		paraview-3.2.1-qt43.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+%if %{mdkversion} >= 200810
+BuildRequires:  cmake >= 2.5.0-0.20071024.3
+%else
 BuildRequires:  cmake
+%endif
 %if %{build_mpi}
 BuildRequires:	openmpi
 BuildRequires:  openmpi-devel
