@@ -15,7 +15,7 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 4
+Release:        %mkrel 5
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
@@ -32,6 +32,7 @@ Patch5:         paraview-3.2.1-make.patch
 Patch6:		paraview-3.2.1-glxext_legacy.patch
 Patch7:		paraview-3.2.1-qt43.patch
 Patch8:		paraview-3.2.1-fix_anim_view.patch
+Patch9:		paraview-3.2.1-OpenFOAM.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -59,6 +60,9 @@ BuildRequires:  tk-devel
 BuildRequires:  zlib-devel
 Requires:       %{name}-data = %{version}-%{release}
 Requires:       qt4-assistant
+%ifarch %x86_64
+Requires:	lib64hdf5_0
+%endif
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
 
@@ -157,6 +161,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch6 -p1 -b .glxext
 %patch7 -p1 -b .qt43
 %patch8 -p1 -b .fix6087
+%patch9 -p1 -b .openfoam
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
