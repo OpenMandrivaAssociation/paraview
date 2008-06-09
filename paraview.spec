@@ -359,21 +359,29 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %post
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %update_desktop_database
 
 
 %postun
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %clean_desktop_database
 
 %if %{build_mpi}
 %post   mpi
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %update_desktop_database
 
 %postun mpi
+%if %mdkversion < 200900
 /sbin/ldconfig
+%endif
 %clean_desktop_database
 %endif
 
