@@ -4,7 +4,7 @@
 
 %define pv_maj 3
 %define pv_min 2
-%define pv_patch 1
+%define pv_patch 3
 %define pv_majmin %{pv_maj}.%{pv_min}
 
 %define qt_dir 			%{_prefix}/lib/qt4
@@ -15,24 +15,24 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 9
+Release:        %mkrel 1
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
 URL:            http://www.paraview.org/
-Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.bz2
+Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.lzma
 Source2:        paraview.xml
 Source3:	http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
-Patch0:         paraview-3.2-qt.patch
-Patch1:         paraview-3.2.1-rpath.patch
-Patch2:         paraview-3.2.1-install.patch
-Patch3:         paraview-3.2.1-doc.patch
-Patch4:         paraview-3.2.1-assistant-qt4.patch
-Patch5:         paraview-3.2.1-make.patch
-Patch6:		paraview-3.2.1-glxext_legacy.patch
-Patch7:		paraview-3.2.1-qt43.patch
-Patch8:		paraview-3.2.1-fix_anim_view.patch
-Patch9:		paraview-3.2.1-OpenFOAM.patch
+#Patch0:         paraview-3.2-qt.patch
+Patch1:         paraview-3.2.3-rpath.patch
+Patch2:         paraview-3.2.3-install.patch
+Patch3:         paraview-3.2.3-doc.patch
+Patch4:         paraview-3.2.3-assistant-qt4.patch
+Patch5:         paraview-3.2.3-make.patch
+Patch6:		paraview-3.2.3-glxext_legacy.patch
+#Patch7:		paraview-3.2.1-qt43.patch
+#Patch8:		paraview-3.2.1-fix_anim_view.patch
+Patch9:		paraview-3.2.3-OpenFOAM.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -159,8 +159,8 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch4 -p1 -b .assistant-qt4
 %patch5 -p0 -b .make
 %patch6 -p1 -b .glxext
-%patch7 -p1 -b .qt43
-%patch8 -p1 -b .fix6087
+#%patch7 -p1 -b .qt43
+#%patch8 -p1 -b .fix6087
 %patch9 -p1 -b .openfoam
 
 %build
