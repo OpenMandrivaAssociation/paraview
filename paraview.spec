@@ -23,7 +23,7 @@ URL:            http://www.paraview.org/
 Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.lzma
 Source2:        paraview.xml
 Source3:	http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
-#Patch0:         paraview-3.2-qt.patch
+Patch0:         paraview-3.2.3-qt.patch
 Patch1:         paraview-3.2.3-rpath.patch
 Patch2:         paraview-3.2.3-install.patch
 Patch3:         paraview-3.2.3-doc.patch
@@ -45,6 +45,7 @@ BuildRequires:  openmpi-devel
 %endif
 BuildRequires:  desktop-file-utils
 BuildRequires:  doxygen
+BuildRequires:  gnuplot
 BuildRequires:  expat-devel
 BuildRequires:  freetype-devel
 BuildRequires:  GL-devel
@@ -153,6 +154,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 %prep
 %setup -q -n ParaView%{version}
+%patch0 -p1 -b .qt
 %patch1 -p1 -b .rpath
 %patch2 -p1 -b .install
 %patch3 -p1 -b .doc
