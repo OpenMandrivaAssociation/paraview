@@ -30,7 +30,7 @@ Patch3:         paraview-3.2.3-doc.patch
 Patch4:         paraview-3.2.3-assistant-qt4.patch
 Patch5:         paraview-3.2.3-make.patch
 Patch6:		paraview-3.2.3-glxext_legacy.patch
-#Patch7:		paraview-3.2.1-qt43.patch
+Patch7:		paraview-3.2.1-dicomfile.patch
 #Patch8:		paraview-3.2.1-fix_anim_view.patch
 Patch9:		paraview-3.2.3-OpenFOAM.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -161,7 +161,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch4 -p1 -b .assistant-qt4
 %patch5 -p0 -b .make
 %patch6 -p1 -b .glxext
-#%patch7 -p1 -b .qt43
+%patch7 -p1 -b .dicomfile
 #%patch8 -p1 -b .fix6087
 %patch9 -p1 -b .openfoam
 
