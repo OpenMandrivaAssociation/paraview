@@ -31,7 +31,7 @@ Patch4:         paraview-3.2.3-assistant-qt4.patch
 Patch5:         paraview-3.2.3-make.patch
 Patch6:		paraview-3.2.3-glxext_legacy.patch
 Patch7:		paraview-3.2.3-dicomfile.patch
-#Patch8:		paraview-3.2.1-fix_anim_view.patch
+Patch8:		paraview-3.2.3-metautils.patch
 Patch9:		paraview-3.2.3-OpenFOAM.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 %if %{mdkversion} >= 200810
@@ -162,7 +162,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch5 -p0 -b .make
 %patch6 -p1 -b .glxext
 %patch7 -p1 -b .dicomfile
-#%patch8 -p1 -b .fix6087
+%patch8 -p1 -b .metautils
 %patch9 -p1 -b .openfoam
 
 %build
