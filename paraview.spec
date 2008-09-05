@@ -33,6 +33,7 @@ Patch6:		paraview-3.2.3-glxext_legacy.patch
 Patch7:		paraview-3.2.3-dicomfile.patch
 Patch8:		paraview-3.2.3-metautils.patch
 Patch9:		paraview-3.2.3-OpenFOAM.patch
+Patch10:	paraview-3.2.3-metacommand.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -164,6 +165,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch7 -p1 -b .dicomfile
 %patch8 -p1 -b .metautils
 %patch9 -p1 -b .openfoam
+%patch10 -p1 -b .metacommand
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
