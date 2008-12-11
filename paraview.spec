@@ -52,7 +52,7 @@ BuildRequires:  freetype-devel
 BuildRequires:  GL-devel
 BuildRequires:	graphviz
 BuildRequires:	hdf5-devel
-BuildRequires:	ImageMagick
+BuildRequires:	imagemagick
 BuildRequires:  libtiff-devel
 BuildRequires:  python-devel
 BuildRequires:  qt4-devel
