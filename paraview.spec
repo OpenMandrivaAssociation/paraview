@@ -3,8 +3,8 @@
 %{?_without_build_mpit: %{expand: %%global build_mpi 0}}
 
 %define pv_maj 3
-%define pv_min 2
-%define pv_patch 3
+%define pv_min 4
+%define pv_patch 0
 %define pv_majmin %{pv_maj}.%{pv_min}
 
 %define qt_dir 			%{_prefix}/lib/qt4
@@ -20,20 +20,19 @@ Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
 URL:            http://www.paraview.org/
-Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.lzma
+Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.gz
 Source2:        paraview.xml
-Source3:	http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
-Patch0:         paraview-3.2.3-qt.patch
+Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
+Patch0:         paraview-3.4.0-qt.patch
 Patch1:         paraview-3.2.3-rpath.patch
 Patch2:         paraview-3.2.3-install.patch
-Patch3:         paraview-3.2.3-doc.patch
+Patch3:         paraview-3.4.0-doc.patch
 Patch4:         paraview-3.2.3-assistant-qt4.patch
-Patch5:         paraview-3.2.3-make.patch
-Patch6:		paraview-3.2.3-glxext_legacy.patch
-Patch7:		paraview-3.2.3-dicomfile.patch
-Patch8:		paraview-3.2.3-metautils.patch
-Patch9:		paraview-3.2.3-OpenFOAM.patch
-Patch10:	paraview-3.2.3-metacommand.patch
+Patch6:         paraview-3.4.0-glxext_legacy.patch
+Patch7:         paraview-3.2.3-dicomfile.patch
+Patch8:         paraview-3.4.0-metautils.patch
+Patch9:         paraview-3.2.3-OpenFOAM.patch
+Patch10:        paraview-3.2.3-metacommand.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -154,17 +153,16 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 
 %prep
-%setup -q -n ParaView%{version}
+%setup -q -n ParaView-%{version}
 %patch0 -p1 -b .qt
 %patch1 -p1 -b .rpath
-%patch2 -p1 -b .install
+#%patch2 -p1 -b .install
 %patch3 -p1 -b .doc
 %patch4 -p1 -b .assistant-qt4
-%patch5 -p0 -b .make
 %patch6 -p1 -b .glxext
 %patch7 -p1 -b .dicomfile
 %patch8 -p1 -b .metautils
-%patch9 -p1 -b .openfoam
+#%patch9 -p1 -b .openfoam
 %patch10 -p1 -b .metacommand
 
 %build
