@@ -7,15 +7,15 @@
 %define pv_patch 1
 %define pv_majmin %{pv_maj}.%{pv_min}
 
-%define qt_dir          %{_prefix}/lib/qt4
-%define qt_designer_plugins_dir %{qt_dir}/plugins/%{_lib}/designer
+%define qt_dir          %{qt4dir}
+%define qt_designer_plugins_dir %{qt4plugins}/designer
 %define python_include_path %{_includedir}/python%{pyver}
 %define python_library      %{_libdir}/python%{pyver}/config/libpython%{pyver}.a
 %define python_site_package %{_libdir}/python%{pyver}/site-packages
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 2
+Release:        %mkrel 3
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
@@ -411,7 +411,7 @@ rm -rf %{buildroot}
 %{_bindir}/vtkSMExtractDocumentation
 %{_datadir}/applications/%{name}.desktop
 %{_libdir}/paraview
-%{qt_dir}/plugins/%{_lib}/designer/*.so
+%{qt4plugins}/designer/*.so
 %{python_site_package}/paraview.pth
 
 
