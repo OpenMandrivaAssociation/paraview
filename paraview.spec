@@ -24,7 +24,7 @@ Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.
 Source2:        paraview.xml
 Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
 
-Patch0:         paraview-3.6.1-fix-format-errors.patch
+Patch0:         paraview-3.6.2-fix-format-errors.patch
 Patch1:		paraview-3.6.2-link.patch
 # fedora patches
 # http://cvs.fedoraproject.org/viewvc/rpms/paraview/devel
@@ -157,15 +157,14 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 %prep
 %setup -q -n ParaView3
+%patch0 -p0 -b .str
 %patch1 -p0 -b .link
 %patch22 -p1 -b .hdf
 %if 0
-%patch0 -p1 -b .format
 %patch10 -p1 -b .doc
 %patch11 -p1 -b .cmake
 %patch12 -p1 -b .plugins
 %patch21 -p1 -b .assistant-qt4
-%patch22 -p1 -b .hdf
 %patch23 -p1 -b .pointsprite
 %endif
 
