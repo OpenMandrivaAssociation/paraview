@@ -4,7 +4,7 @@
 
 %define pv_maj 3
 %define pv_min 6
-%define pv_patch 1
+%define pv_patch 2
 %define pv_majmin %{pv_maj}.%{pv_min}
 
 %define qt_dir          %{qt4dir}
@@ -15,7 +15,7 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 3
+Release:        %mkrel 1
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
@@ -25,6 +25,7 @@ Source2:        paraview.xml
 Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
 
 Patch0:         paraview-3.6.1-fix-format-errors.patch
+Patch1:		paraview-3.6.2-link.patch
 # fedora patches
 # http://cvs.fedoraproject.org/viewvc/rpms/paraview/devel
 Patch10:        paraview-3.6.1-doc.patch
@@ -156,6 +157,9 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 %prep
 %setup -q -n ParaView3
+%patch1 -p0 -b .link
+%patch22 -p1 -b .hdf
+%if 0
 %patch0 -p1 -b .format
 %patch10 -p1 -b .doc
 %patch11 -p1 -b .cmake
@@ -163,18 +167,17 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch21 -p1 -b .assistant-qt4
 %patch22 -p1 -b .hdf
 %patch23 -p1 -b .pointsprite
+%endif
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
-mkdir paraviewbuild
-pushd paraviewbuild
 export CC='gcc'
 export CXX='g++'
 export MAKE='make'
 export CFLAGS="%{optflags} -DH5_USE_16_API"
 export CXXFLAGS="%{optflags} -DH5_USE_16_API"
 export QT_QMAKE_EXECUTABLE=%{qt_dir}/bin/qmake
-cmake .. \
+%cmake \
     -DPV_INSTALL_LIB_DIR:PATH=/%{_lib}/paraview \
     -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
     -DCMAKE_CXX_COMPILER:FILEPATH=$CXX \
@@ -202,19 +205,17 @@ cmake .. \
     -DBUILD_DOCUMENTATION:BOOL=ON \
     -DBUILD_EXAMPLES:BOOL=ON \
     -DGLXEXT_LEGACY:BOOL=ON
-cmake ..
-%make VERBOSE=1
-popd
+%make
+cd ..
+mv build paraviewbuild
 
 %if %{build_mpi}
-mkdir paraviewbuild-mpi
-pushd paraviewbuild-mpi
 export CC='gcc'
 export CXX='mpic++'
 export MAKE='make'
 export CFLAGS="%{optflags} -DH5_USE_16_API"
 export CXXFLAGS="%{optflags} -DH5_USE_16_API"
-cmake .. \
+%cmake \
     -DPV_INSTALL_LIB_DIR:PATH=/%{_lib}/paraview-mpi \
     -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
     -DCMAKE_CXX_COMPILER:FILEPATH=$CXX \
@@ -246,8 +247,8 @@ cmake .. \
     -DBUILD_DOCUMENTATION:BOOL=ON \
     -DBUILD_EXAMPLES:BOOL=ON \
     -DGLXEXT_LEGACY:BOOL=ON
-cmake ..
-%make VERBOSE=1
+%make
+mv build paraviewbuild-mpi
 %endif
 
 %install
@@ -274,8 +275,7 @@ convert paraview-logo.png -resize 16x16+0+0! -transparent white %{buildroot}%{_m
 
 %if %{build_mpi}
 # Install mpi version
-pushd paraviewbuild-mpi
-%makeinstall_std
+%makeinstall_std -C paraviewbuild-mpi
 
 mv %{buildroot}/%{_lib}/paraview-mpi/* %{buildroot}%{_libdir}/paraview-mpi
 rm -r %{buildroot}/%{_lib}/paraview-mpi
@@ -307,8 +307,6 @@ desktop-file-install --vendor="" \
        --dir %{buildroot}%{_datadir}/applications/ \
        %{name}-mpi.desktop
 
-popd
-
 # Move the mpi binaries, includes, and man pages out of the way
 pushd %{buildroot}/%{_bindir}
 for f in *
@@ -325,8 +323,7 @@ rm -rf %{buildroot}%{_datadir}/paraview/Documentation-mpi
 %endif
 
 # Install the normal version
-pushd paraviewbuild
-%makeinstall_std
+%makeinstall_std -C paraviewbuild
 
 mv %{buildroot}/%{_lib}/paraview/* %{buildroot}%{_libdir}/paraview
 rm -r %{buildroot}/%{_lib}/paraview
@@ -357,7 +354,6 @@ EOF
 desktop-file-install --vendor="" \
        --dir %{buildroot}%{_datadir}/applications/ \
        %{name}.desktop
-popd
 
 %clean
 rm -rf %{buildroot}
