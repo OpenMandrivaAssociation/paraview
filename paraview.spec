@@ -159,14 +159,12 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %setup -q -n ParaView3
 %patch0 -p0 -b .str
 %patch1 -p0 -b .link
-%patch22 -p1 -b .hdf
-%if 0
 %patch10 -p1 -b .doc
 %patch11 -p1 -b .cmake
 %patch12 -p1 -b .plugins
 %patch21 -p1 -b .assistant-qt4
+%patch22 -p1 -b .hdf
 %patch23 -p1 -b .pointsprite
-%endif
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
