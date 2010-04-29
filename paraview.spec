@@ -245,6 +245,7 @@ export CXXFLAGS="%{optflags} -DH5_USE_16_API"
     -DBUILD_EXAMPLES:BOOL=ON \
     -DGLXEXT_LEGACY:BOOL=ON
 %make
+cd ..
 mv build paraviewbuild-mpi
 %endif
 
@@ -288,7 +289,6 @@ echo %{_libdir}/paraview-mpi > %{buildroot}%{python_site_package}/paraview-mpi.p
 # Create desktop file
 cat > %{name}-mpi.desktop <<EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=ParaView Viewer MPI
 GenericName=ParaView Data Viewer
 Comment=ParaView allows MPI enabled viewing of large data sets
@@ -296,7 +296,7 @@ Type=Application
 Terminal=false
 Icon=paraview
 MimeType=application/x-paraview;
-Categories=Graphics;Science;Math
+Categories=Graphics;Science;Math;Qt;
 Exec=mpirun C paraview-mpi
 EOF
 
@@ -336,7 +336,6 @@ echo %{_libdir}/paraview > %{buildroot}%{python_site_package}/paraview.pth
 # Create desktop file
 cat > %{name}.desktop <<EOF
 [Desktop Entry]
-Encoding=UTF-8
 Name=ParaView Viewer
 GenericName=ParaView Data Viewer
 Comment=ParaView allows viewing of large data sets
@@ -344,7 +343,7 @@ Type=Application
 Terminal=false
 Icon=paraview
 MimeType=application/x-paraview;
-Categories=Graphics;Science;Math;
+Categories=Graphics;Science;Math;Qt;
 Exec=paraview
 EOF
 
