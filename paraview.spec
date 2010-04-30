@@ -49,6 +49,7 @@ BuildRequires:  openmpi-devel
 BuildRequires:  desktop-file-utils
 BuildRequires:  doxygen
 BuildRequires:  gnuplot
+BuildRequires:	wget
 BuildRequires:  expat-devel
 BuildRequires:  freetype-devel
 BuildRequires:  GL-devel
@@ -273,7 +274,9 @@ convert paraview-logo.png -resize 16x16+0+0! -transparent white %{buildroot}%{_m
 
 %if %{build_mpi}
 # Install mpi version
-%makeinstall_std -C paraviewbuild-mpi
+mv paraviewbuild-mpi build
+%makeinstall_std -C build
+mv build paraviewbuild-mpi
 
 mv %{buildroot}/%{_lib}/paraview-mpi/* %{buildroot}%{_libdir}/paraview-mpi
 rm -r %{buildroot}/%{_lib}/paraview-mpi
@@ -320,7 +323,9 @@ rm -rf %{buildroot}%{_datadir}/paraview/Documentation-mpi
 %endif
 
 # Install the normal version
-%makeinstall_std -C paraviewbuild
+mv paraviewbuild build
+%makeinstall_std -C build
+mv build paraviewbuild
 
 mv %{buildroot}/%{_lib}/paraview/* %{buildroot}%{_libdir}/paraview
 rm -r %{buildroot}/%{_lib}/paraview
