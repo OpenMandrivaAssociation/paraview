@@ -60,11 +60,13 @@ BuildRequires:  libtiff-devel
 BuildRequires:  python-devel
 BuildRequires:  qt4-devel
 BuildRequires:  qt4-assistant
+BuildRequires:	qt-assistant-adp-devel
+BuildRequires:	qt-assistant-adp
 BuildRequires:  readline-devel
 BuildRequires:  tk-devel
 BuildRequires:  zlib-devel
 Requires:       %{name}-data = %{version}-%{release}
-Requires:       qt4-assistant
+Requires:       qt-assistant-adp
 %ifarch %x86_64
 Requires:   lib64hdf5_0
 %endif
