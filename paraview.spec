@@ -3,8 +3,8 @@
 %{?_without_build_mpit: %{expand: %%global build_mpi 0}}
 
 %define pv_maj 3
-%define pv_min 6
-%define pv_patch 2
+%define pv_min 8
+%define pv_patch 0
 %define pv_majmin %{pv_maj}.%{pv_min}
 
 %define qt_dir          %{qt4dir}
@@ -20,21 +20,22 @@ Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
 URL:            http://www.paraview.org/
-Source0:        http://www.paraview.org/files/v%{pv_majmin}/paraview-%{version}.tar.gz
+Source0:        http://www.paraview.org/files/v%{pv_majmin}/ParaView-%{version}.tar.gz
 Source2:        paraview.xml
 Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
 
-Patch0:         paraview-3.6.2-fix-format-errors.patch
-Patch1:		paraview-3.6.2-link.patch
+Patch0:         paraview-3.8.0-fix-format-errors.patch
+Patch1:		paraview-3.8.0-link.patch
 # fedora patches
 # http://cvs.fedoraproject.org/viewvc/rpms/paraview/devel
 Patch10:        paraview-3.6.1-doc.patch
 Patch11:        paraview-3.6.1-cmake-install-prefix.patch
 Patch12:        paraview-3.6.1-plugins.patch
+Patch13:	paraview-3.8.0-gcc43.patch
 # gentoo patches
 # http://sources.gentoo.org/viewcvs.py/gentoo-x86/sci-visualization/paraview
 Patch21:        paraview-3.6.1-assistant.patch
-Patch22:        paraview-3.6.1-hdf-1.8.3.patch
+Patch22:        paraview-3.8.0-hdf-1.8.3.patch
 Patch23:        paraview-3.6.1-pointsprite-disable.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 %if %{mdkversion} >= 200810
@@ -159,7 +160,11 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 
 %prep
-%setup -q -n ParaView3
+%setup -q -n ParaView-%{version}
+%patch1 -p0 -b .link
+%patch13 -p1 -b .gcc
+%patch22 -p1 -b .hdf
+%if 0
 %patch0 -p0 -b .str
 %patch1 -p0 -b .link
 %patch10 -p1 -b .doc
@@ -168,6 +173,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %patch21 -p1 -b .assistant-qt4
 %patch22 -p1 -b .hdf
 %patch23 -p1 -b .pointsprite
+%endif
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
