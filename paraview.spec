@@ -161,6 +161,7 @@ Requires:       %{name}-mpi = %{version}-%{release}
 
 %prep
 %setup -q -n ParaView-%{version}
+%patch0 -p0 -b .str
 %patch1 -p0 -b .link
 %patch13 -p1 -b .gcc
 %patch22 -p1 -b .hdf
