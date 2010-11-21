@@ -4,7 +4,7 @@
 
 %define pv_maj 3
 %define pv_min 8
-%define pv_patch 0
+%define pv_patch 1
 %define pv_majmin %{pv_maj}.%{pv_min}
 
 %define qt_dir          %{qt4dir}
