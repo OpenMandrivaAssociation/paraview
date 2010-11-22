@@ -26,17 +26,10 @@ Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl
 
 Patch0:         paraview-3.8.0-fix-format-errors.patch
 Patch1:		paraview-3.8.0-link.patch
-# fedora patches
-# http://cvs.fedoraproject.org/viewvc/rpms/paraview/devel
-Patch10:        paraview-3.6.1-doc.patch
-Patch11:        paraview-3.6.1-cmake-install-prefix.patch
-Patch12:        paraview-3.6.1-plugins.patch
-Patch13:	paraview-3.8.0-gcc43.patch
-# gentoo patches
-# http://sources.gentoo.org/viewcvs.py/gentoo-x86/sci-visualization/paraview
-Patch21:        paraview-3.6.1-assistant.patch
-Patch22:        paraview-3.8.0-hdf-1.8.3.patch
-Patch23:        paraview-3.6.1-pointsprite-disable.patch
+Patch2:		paraview-3.8.0-gcc43.patch
+Patch3:		paraview-3.8.0-hdf-1.8.3.patch
+Patch4:		paraview-3.8.0-demo.patch
+Patch5:		paraview-3.8.0-py27.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -163,18 +156,10 @@ Requires:       %{name}-mpi = %{version}-%{release}
 %setup -q -n ParaView-%{version}
 %patch0 -p0 -b .str
 %patch1 -p0 -b .link
-%patch13 -p1 -b .gcc
-%patch22 -p1 -b .hdf
-%if 0
-%patch0 -p0 -b .str
-%patch1 -p0 -b .link
-%patch10 -p1 -b .doc
-%patch11 -p1 -b .cmake
-%patch12 -p1 -b .plugins
-%patch21 -p1 -b .assistant-qt4
-%patch22 -p1 -b .hdf
-%patch23 -p1 -b .pointsprite
-%endif
+%patch2 -p1 -b .gcc
+%patch3 -p1 -b .hdf
+%patch4 -p1 -b .demoinstall
+%patch5 -p1 -b .py27
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
