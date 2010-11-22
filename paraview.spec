@@ -134,24 +134,6 @@ Requires(postun): desktop-file-utils
 %{summary}.
 
 
-%package        devel
-Summary:        Development files for ParaView
-Group:          Sciences/Other
-Requires:       %{name} = %{version}-%{release}
-
-%description    devel
-%{summary}.
-
-
-%package        mpi-devel
-Summary:        Development files for the mpi version of ParaView
-Group:          Sciences/Other
-Requires:       %{name}-mpi = %{version}-%{release}
-
-%description    mpi-devel
-%{summary}.
-
-
 %prep
 %setup -q -n ParaView-%{version}
 %patch0 -p0 -b .str
