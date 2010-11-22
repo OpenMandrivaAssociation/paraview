@@ -10,7 +10,7 @@
 %define qt_dir          %{qt4dir}
 %define qt_designer_plugins_dir %{qt4plugins}/designer
 %define python_include_path %{_includedir}/python%{pyver}
-%define python_library      %{_libdir}/python%{pyver}/config/libpython%{pyver}.a
+%define python_library      %{_libdir}/python%{pyver}/config/libpython%{pyver}.so
 %define python_site_package %{_libdir}/python%{pyver}/site-packages
 
 Name:           paraview
@@ -323,8 +323,6 @@ do
    mv $f ${f}-mpi
 done
 popd
-mv %{buildroot}/%{_includedir}/paraview-%{pv_majmin} \
-    %{buildroot}/%{_includedir}/paraview-%{pv_majmin}-mpi
 rm -rf %{buildroot}%{_mandir}
 
 # Remove mpi copy of documentation
@@ -403,39 +401,34 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc License_v1.2.txt
-%doc %{_datadir}/paraview/
 %{_sysconfdir}/ld.so.conf.d/paraview-%{_arch}.conf
+%{_bindir}/lproj
 %{_bindir}/paraview
 %{_bindir}/pvbatch
+%{_bindir}/pvblot
 %{_bindir}/pvdataserver
 %{_bindir}/pvpython
 %{_bindir}/pvrenderserver
 %{_bindir}/pvserver
-%{_bindir}/pvTestDriver
-%{_bindir}/assistant
-%{_bindir}/lproj
-%{_bindir}/vtkSMExtractDocumentation
+%{_bindir}/smTestDriver
 %{_datadir}/applications/%{name}.desktop
 %{_libdir}/paraview
-%{qt4plugins}/designer/*.so
 %{python_site_package}/paraview.pth
-
 
 %if %{build_mpi}
 %files mpi
 %defattr(-,root,root,-)
 %doc License_v1.2.txt
 %{_sysconfdir}/ld.so.conf.d/paraview-mpi-%{_arch}.conf
+%{_bindir}/lproj-mpi
 %{_bindir}/paraview-mpi
 %{_bindir}/pvbatch-mpi
+%{_bindir}/pvblot-mpi
 %{_bindir}/pvdataserver-mpi
 %{_bindir}/pvpython-mpi
 %{_bindir}/pvrenderserver-mpi
 %{_bindir}/pvserver-mpi
-%{_bindir}/pvTestDriver-mpi
-%{_bindir}/assistant-mpi
-%{_bindir}/lproj-mpi
-%{_bindir}/vtkSMExtractDocumentation-mpi
+%{_bindir}/smTestDriver-mpi
 %{_datadir}/applications/%{name}-mpi.desktop
 %{_libdir}/paraview-mpi
 %{python_site_package}/paraview-mpi.pth
@@ -447,14 +440,3 @@ rm -rf %{buildroot}
 %{_liconsdir}/paraview.png
 %{_miconsdir}/paraview.png
 %{_datadir}/mime/packages/paraview.xml
-
-%files devel
-%defattr(-,root,root,-)
-%{_includedir}/paraview-%{pv_majmin}/
-%{_datadir}/paraview
-
-%if %{build_mpi}
-%files mpi-devel
-%defattr(-,root,root,-)
-%{_includedir}/paraview-%{pv_majmin}-mpi/
-%endif
