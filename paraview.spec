@@ -15,7 +15,7 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
@@ -160,6 +160,7 @@ export QT_QMAKE_EXECUTABLE=%{qt_dir}/bin/qmake
     -DTCL_LIBRARY:PATH=tcl \
     -DTK_LIBRARY:PATH=tk \
     -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
+    -DPARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF \
     -DPARAVIEW_USE_SYSTEM_HDF5:BOOL=ON \
     -DPYTHON_INCLUDE_PATH:PATH=%{python_include_path} \
     -DPYTHON_LIBRARY:FILEPATH=%{python_library} \
@@ -198,6 +199,7 @@ export CXXFLAGS="%{optflags} -DH5_USE_16_API"
     -DTCL_LIBRARY:PATH=tcl \
     -DTK_LIBRARY:PATH=tk \
     -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
+    -DPARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF \
     -DPARAVIEW_USE_SYSTEM_HDF5:BOOL=ON \
     -DPYTHON_INCLUDE_PATH:PATH=%{python_include_path} \
     -DPYTHON_LIBRARY:FILEPATH=%{python_library} \
