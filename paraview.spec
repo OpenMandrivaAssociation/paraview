@@ -54,8 +54,6 @@ BuildRequires:  libtiff-devel
 BuildRequires:  python-devel
 BuildRequires:  qt4-devel
 BuildRequires:  qt4-assistant
-BuildRequires:	qt-assistant-adp-devel
-BuildRequires:	qt-assistant-adp
 BuildRequires:  readline-devel
 BuildRequires:  tk-devel
 BuildRequires:  zlib-devel
