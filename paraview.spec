@@ -59,6 +59,7 @@ BuildRequires:  tk-devel
 BuildRequires:  zlib-devel
 Requires:       %{name}-data = %{version}-%{release}
 Requires:       qt-assistant-adp
+Requires:	qt4-database-plugin-sqlite
 %ifarch %x86_64
 Requires:   lib64hdf5_0
 %endif
