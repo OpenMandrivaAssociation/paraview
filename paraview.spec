@@ -3,7 +3,7 @@
 %{?_without_build_mpit: %{expand: %%global build_mpi 0}}
 
 %define pv_maj 3
-%define pv_min 8
+%define pv_min 10
 %define pv_patch 1
 %define pv_majmin %{pv_maj}.%{pv_min}
 
@@ -15,7 +15,7 @@
 
 Name:           paraview
 Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 2
+Release:        %mkrel 1
 Summary:        Parallel visualization application
 Group:          Sciences/Other
 License:        BSD
@@ -23,13 +23,15 @@ URL:            http://www.paraview.org/
 Source0:        http://www.paraview.org/files/v%{pv_majmin}/ParaView-%{version}.tar.gz
 Source2:        paraview.xml
 Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
-
-Patch0:         paraview-3.8.0-fix-format-errors.patch
-Patch1:		paraview-3.8.0-link.patch
-Patch2:		paraview-3.8.0-gcc43.patch
-Patch3:		paraview-3.8.0-hdf-1.8.3.patch
-Patch4:		paraview-3.8.0-demo.patch
-Patch5:		paraview-3.8.0-py27.patch
+#Add some needed includes
+Patch1:         paraview-3.8.0-include.patch
+#Need some more includes (<cstddef>) for gcc 4.6.0
+Patch2:         paraview-3.10.0-gcc46.patch
+#Installs PointSpriteDemo into incorrect location, remove install for now
+#Reported upstream: http://public.kitware.com/mantis/view.php?id=9292
+Patch5:         paraview-3.8.0-demo.patch
+#Reported upstream: http://public.kitware.com/mantis/view.php?id=7023
+Patch7:         paraview-3.2.2-hdf5.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}
 %if %{mdkversion} >= 200810
 BuildRequires:  cmake >= 2.5.0-0.20071024.3
@@ -135,12 +137,12 @@ Requires(postun): desktop-file-utils
 
 %prep
 %setup -q -n ParaView-%{version}
-%patch0 -p0 -b .str
-%patch1 -p0 -b .link
-%patch2 -p1 -b .gcc
-%patch3 -p1 -b .hdf
-%patch4 -p1 -b .demoinstall
-%patch5 -p1 -b .py27
+%patch1 -p1 -b .include
+%patch2 -p1 -b .gcc46
+%patch5 -p1 -b .demo
+%patch7 -p1 -b .hdf5
+#Remove included hdf5 just to be sure
+rm -r VTK/Utilities/vtkhdf5
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
