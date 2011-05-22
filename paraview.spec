@@ -23,6 +23,7 @@ URL:            http://www.paraview.org/
 Source0:        http://www.paraview.org/files/v%{pv_majmin}/ParaView-%{version}.tar.gz
 Source2:        paraview.xml
 Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
+Patch0:		paraview-3.10.1-link.patch
 #Add some needed includes
 Patch1:         paraview-3.8.0-include.patch
 #Need some more includes (<cstddef>) for gcc 4.6.0
@@ -137,6 +138,7 @@ Requires(postun): desktop-file-utils
 
 %prep
 %setup -q -n ParaView-%{version}
+%patch0 -p0 -b .link
 %patch1 -p1 -b .include
 %patch2 -p1 -b .gcc46
 %patch5 -p1 -b .demo
