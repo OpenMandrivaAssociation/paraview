@@ -141,8 +141,6 @@ Requires(postun): desktop-file-utils
 %patch2 -p1 -b .gcc46
 %patch5 -p1 -b .demo
 %patch7 -p1 -b .hdf5
-#Remove included hdf5 just to be sure
-rm -r VTK/Utilities/vtkhdf5
 
 %build
 rm -rf paraviewbuild paraviewbuild-mpi
