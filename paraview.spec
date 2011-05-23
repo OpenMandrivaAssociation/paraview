@@ -337,43 +337,10 @@ desktop-file-install --vendor="" \
 %clean
 rm -rf %{buildroot}
 
-%post
-%if %mdkversion < 200900
-/sbin/ldconfig
-%endif
-%update_desktop_database
-
-%postun
-%if %mdkversion < 200900
-/sbin/ldconfig
-%endif
-%clean_desktop_database
-
-%if %{build_mpi}
-%post   mpi
-%if %mdkversion < 200900
-/sbin/ldconfig
-%endif
-%update_desktop_database
-
-%postun mpi
-%if %mdkversion < 200900
-/sbin/ldconfig
-%endif
-%clean_desktop_database
-%endif
-
-%post   data
-%update_mime_database
-
-%postun data
-%clean_mime_database
-
 %files
 %defattr(-,root,root,-)
 %doc License_v1.2.txt
 %{_sysconfdir}/ld.so.conf.d/paraview-%{_arch}.conf
-%{_bindir}/lproj
 %{_bindir}/paraview
 %{_bindir}/pvbatch
 %{_bindir}/pvblot
@@ -391,7 +358,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc License_v1.2.txt
 %{_sysconfdir}/ld.so.conf.d/paraview-mpi-%{_arch}.conf
-%{_bindir}/lproj-mpi
 %{_bindir}/paraview-mpi
 %{_bindir}/pvbatch-mpi
 %{_bindir}/pvblot-mpi
