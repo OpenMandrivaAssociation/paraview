@@ -50,6 +50,7 @@ BuildRequires:	wget
 BuildRequires:  expat-devel
 BuildRequires:  freetype-devel
 BuildRequires:  GL-devel
+BuildRequires:	libxt-devel
 BuildRequires:  graphviz
 BuildRequires:  hdf5-devel
 BuildRequires:  imagemagick
