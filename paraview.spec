@@ -145,7 +145,6 @@ NOTE: This version has NOT been compiled with MPI support.
 %exclude %{_libdir}/%{namever}/libvtkWidgets.so
 %exclude %{_libdir}/%{namever}/CMake
 %doc %{_docdir}/%{namever}
-%doc %{_docdir}/paraview
 %doc %{_mandir}/man3/*.3*
 
 #-----------------------------------------------------------------------
@@ -230,7 +229,7 @@ Requires(postun): desktop-file-utils
 %{_liconsdir}/paraview.png
 %{_miconsdir}/paraview.png
 %{_datadir}/mime/packages/paraview.xml
-%doc %{_datadir}/%{namever}
+%{_datadir}/%{namever}
 %{_datadir}/paraview
 
 #-----------------------------------------------------------------------
@@ -393,6 +392,5 @@ pushd %{buildroot}%{_prefix}
 	mv share/doc/paraview/* share/doc/%{namever}
 	rm -fr share/doc/paraview
     fi
-    ln -sf %{namever} share/doc/paraview
     ln -sf %{namever} share/paraview
 popd
