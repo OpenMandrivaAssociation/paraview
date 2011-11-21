@@ -95,7 +95,7 @@ NOTE: This version has NOT been compiled with MPI support.
 %{_bindir}/pvserver
 %{_bindir}/smTestDriver
 %{_datadir}/applications/%{name}.desktop
-%dir %{_libdir}/%{namever}
+%{_libdir}/%{namever}
 %{_libdir}/paraview
 %{py_platsitedir}/paraview.pth
 %exclude %{_libdir}/%{namever}/*.cmake
@@ -144,7 +144,7 @@ NOTE: This version has NOT been compiled with MPI support.
 %exclude %{_libdir}/%{namever}/libvtkWidgetsPythonD.so
 %exclude %{_libdir}/%{namever}/libvtkWidgets.so
 %exclude %{_libdir}/%{namever}/CMake
-%doc %dir %{_docdir}/%{namever}
+%doc %{_docdir}/%{namever}
 %doc %{_docdir}/paraview
 %doc %{_mandir}/man3/*.3*
 
@@ -165,7 +165,7 @@ Requires:	python-vtk
 %defattr(-,root,root,-)
 %{_bindir}/kwProcessXML
 %{_bindir}/vtkWrapClientServer
-%dir %{_includedir}/%{namever}
+%{_includedir}/%{namever}
 %{_includedir}/paraview
 %{_libdir}/%{namever}/*.cmake
 %{_libdir}/%{namever}/libCosmo.so
@@ -230,7 +230,7 @@ Requires(postun): desktop-file-utils
 %{_liconsdir}/paraview.png
 %{_miconsdir}/paraview.png
 %{_datadir}/mime/packages/paraview.xml
-%dir %{_datadir}/%{namever}
+%doc %{_datadir}/%{namever}
 %{_datadir}/paraview
 
 #-----------------------------------------------------------------------
@@ -389,9 +389,9 @@ pushd %{buildroot}%{_prefix}
 	%{_lib}/%{namever}/CMake/*.cmake
     %endif
     ln -sf %{namever} include/paraview
-    if [ -d share/doc/paraview ]; then
+    if [ -e share/doc/paraview ]; then
 	mv share/doc/paraview/* share/doc/%{namever}
-	rmdir share/doc/paraview
+	rm -fr share/doc/paraview
     fi
     ln -sf %{namever} share/doc/paraview
     ln -sf %{namever} share/paraview
