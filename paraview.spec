@@ -298,8 +298,7 @@ export CXXFLAGS="%{optflags} -DH5_USE_16_API"
 # need to load protobuf libraries (also does not build with protobuf 2.4.1)
 # http://www.vtk.org/Bug/bug_relationship_graph.php?bug_id=12718&graph=dependency
 LD_LIBRARY_PATH=$PWD/bin \
-make -j2
-#%#make
+%make
 
 #-----------------------------------------------------------------------
 %install
