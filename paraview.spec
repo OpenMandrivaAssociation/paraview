@@ -3,6 +3,8 @@
 
 %define namever			paraview-3.12
 
+%define _disable_ld_no_undefined	1
+
 %define qt_dir			%{qt4dir}
 %define qt_designer_plugins_dir	%{qt4plugins}/designer
 %define python_include_path	%{_includedir}/python%{pyver}
@@ -143,6 +145,7 @@ NOTE: This version has NOT been compiled with MPI support.
 %exclude %{_libdir}/%{namever}/libvtkWidgets.so
 %exclude %{_libdir}/%{namever}/CMake
 %doc %{_docdir}/%{namever}
+%doc %{_docdir}/paraview
 %doc %{_mandir}/man3/*.3*
 
 #-----------------------------------------------------------------------
@@ -161,6 +164,7 @@ Requires:	python-vtk
 %files		devel
 %defattr(-,root,root,-)
 %{_bindir}/kwProcessXML
+%{_bindir}/vtkWrapClientServer
 %{_includedir}/%{namever}
 %{_includedir}/paraview
 %{_libdir}/%{namever}/*.cmake
@@ -298,7 +302,7 @@ export CXXFLAGS="%{optflags} -DH5_USE_16_API"
 # need to load protobuf libraries (also does not build with protobuf 2.4.1)
 # http://www.vtk.org/Bug/bug_relationship_graph.php?bug_id=12718&graph=dependency
 LD_LIBRARY_PATH=$PWD/bin \
-%make
+%make -j2
 
 #-----------------------------------------------------------------------
 %install
@@ -321,14 +325,24 @@ convert paraview-logo.png -resize 48x48+0+0! -transparent white %{buildroot}%{_l
 convert paraview-logo.png -resize 32x32+0+0! -transparent white %{buildroot}%{_iconsdir}/paraview.png
 convert paraview-logo.png -resize 16x16+0+0! -transparent white %{buildroot}%{_miconsdir}/paraview.png
 
+%ifarch x86_64 ppc64
+perl -pi  -e 's|/lib/|/%{_lib}/|g'					\
+    `find build -name \*-forward.c`
+%endif
+
 %makeinstall_std -C build
 
-# Patching build/Applications/ParaView/paraview-forward.c is not enough
-# just install the actual program to run in $PATH
-for bin in paraview pvbatch pvblot pvdataserver pvpython pvrenderserver pvserver smTestDriver; do
+# vtk-devel
+rm -f %{buildroot}%{_bindir}/vtkWrap*
+# vtk-test-suite
+rm -f %{buildroot}%{_bindir}/vtkEncodeString
+
+for bin in paraview pvbatch pvdataserver pvpython pvrenderserver pvserver smTestDriver; do
     rm -f %{buildroot}%{_bindir}/$bin
     ln -sf %{_libdir}/%{namever}/$bin %{buildroot}%{_bindir}/$bin
 done
+cp build/CMake/tmp/pvblot %{buildroot}%{_bindir}
+cp build/bin/vtkWrapClientServer %{buildroot}%{_bindir}
 
 # ld.conf.d file
 install -d %{buildroot}%{_sysconfdir}/ld.so.conf.d
@@ -366,11 +380,6 @@ cp -fpar Baseline Data %{buildroot}%{_datadir}/%{namever}
 %ifarch x86_64 ppc64
 mv %{buildroot}%{_prefix}/lib/* %{buildroot}%{_libdir}
 %endif
-
-# vtk-devel
-rm -f %{buildroot}%{_bindir}/vtkWrap*
-# vtk-test-suite
-rm -f %{buildroot}%{_bindir}/vtkEncodeString
 
 pushd %{buildroot}%{_prefix}
     ln -sf %{namever} %{_lib}/paraview
