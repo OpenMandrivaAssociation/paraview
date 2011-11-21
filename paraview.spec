@@ -95,7 +95,7 @@ NOTE: This version has NOT been compiled with MPI support.
 %{_bindir}/pvserver
 %{_bindir}/smTestDriver
 %{_datadir}/applications/%{name}.desktop
-%{_libdir}/%{namever}
+%dir %{_libdir}/%{namever}
 %{_libdir}/paraview
 %{py_platsitedir}/paraview.pth
 %exclude %{_libdir}/%{namever}/*.cmake
@@ -144,7 +144,7 @@ NOTE: This version has NOT been compiled with MPI support.
 %exclude %{_libdir}/%{namever}/libvtkWidgetsPythonD.so
 %exclude %{_libdir}/%{namever}/libvtkWidgets.so
 %exclude %{_libdir}/%{namever}/CMake
-%doc %{_docdir}/%{namever}
+%doc %dir %{_docdir}/%{namever}
 %doc %{_docdir}/paraview
 %doc %{_mandir}/man3/*.3*
 
@@ -165,7 +165,7 @@ Requires:	python-vtk
 %defattr(-,root,root,-)
 %{_bindir}/kwProcessXML
 %{_bindir}/vtkWrapClientServer
-%{_includedir}/%{namever}
+%dir %{_includedir}/%{namever}
 %{_includedir}/paraview
 %{_libdir}/%{namever}/*.cmake
 %{_libdir}/%{namever}/libCosmo.so
@@ -230,7 +230,7 @@ Requires(postun): desktop-file-utils
 %{_liconsdir}/paraview.png
 %{_miconsdir}/paraview.png
 %{_datadir}/mime/packages/paraview.xml
-%{_datadir}/%{namever}
+%dir %{_datadir}/%{namever}
 %{_datadir}/paraview
 
 #-----------------------------------------------------------------------
@@ -302,7 +302,7 @@ export CXXFLAGS="%{optflags} -DH5_USE_16_API"
 # need to load protobuf libraries (also does not build with protobuf 2.4.1)
 # http://www.vtk.org/Bug/bug_relationship_graph.php?bug_id=12718&graph=dependency
 LD_LIBRARY_PATH=$PWD/bin \
-%make -j2
+%make
 
 #-----------------------------------------------------------------------
 %install
