@@ -1,71 +1,59 @@
-%define build_mpi   1
-%{?_with_build_mpi: %{expand: %%global build_mpi 1}}
-%{?_without_build_mpit: %{expand: %%global build_mpi 0}}
+# default to enable (and build only) mpi
+%bcond_without			mpi
 
-%define pv_maj 3
-%define pv_min 10
-%define pv_patch 1
-%define pv_majmin %{pv_maj}.%{pv_min}
+%define namever			paraview-3.12
 
-%define qt_dir          %{qt4dir}
-%define qt_designer_plugins_dir %{qt4plugins}/designer
-%define python_include_path %{_includedir}/python%{pyver}
-%define python_library      %{_libdir}/python%{pyver}/config/libpython%{pyver}.so
-%define python_site_package %{_libdir}/python%{pyver}/site-packages
+%define qt_dir			%{qt4dir}
+%define qt_designer_plugins_dir	%{qt4plugins}/designer
+%define python_include_path	%{_includedir}/python%{pyver}
+%define python_library		%{_libdir}/python%{pyver}/config/libpython%{pyver}.so
 
-Name:           paraview
-Version:        %{pv_majmin}.%{pv_patch}
-Release:        %mkrel 1
-Summary:        Parallel visualization application
-Group:          Sciences/Other
-License:        BSD
-URL:            http://www.paraview.org/
-Source0:        http://www.paraview.org/files/v%{pv_majmin}/ParaView-%{version}.tar.gz
-Source2:        paraview.xml
-Source3:        http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
-Patch0:		paraview-3.10.1-link.patch
+Name:		paraview
+Version:	3.12.0
+Release:	%mkrel 1
+Summary:	Parallel visualization application
+Group:		Sciences/Other
+License:	BSD
+URL:		http://www.paraview.org/
+Source0:	http://www.paraview.org/files/v%{version}/ParaView-%{version}.tar.gz
+Source1:	http://paraview.org/files/v%{version}/ParaViewData-%{version}.zip
+Source2:	paraview.xml
+Source3:	http://public.kitware.com/pub/paraview/logos/ParaView-logo-swirl-high-res.png
+Patch0: 	paraview-3.12.0-link.patch
 #Add some needed includes
-Patch1:         paraview-3.8.0-include.patch
-#Need some more includes (<cstddef>) for gcc 4.6.0
-Patch2:         paraview-3.10.0-gcc46.patch
-#Installs PointSpriteDemo into incorrect location, remove install for now
-#Reported upstream: http://public.kitware.com/mantis/view.php?id=9292
-Patch5:         paraview-3.8.0-demo.patch
+Patch1: 	paraview-3.12.0-include.patch
 #Reported upstream: http://public.kitware.com/mantis/view.php?id=7023
-Patch7:         paraview-3.2.2-hdf5.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}
-%if %{mdkversion} >= 200810
-BuildRequires:  cmake >= 2.5.0-0.20071024.3
-%else
-BuildRequires:  cmake
+Patch2: 	paraview-3.12.0-hdf5.patch
+BuildRoot:	%{_tmppath}/%{name}-%{version}
+BuildRequires:	cmake
+%if %{with mpi}
+BuildRequires:	openmpi
+BuildRequires:	openmpi-devel
+%rename 	paraview-mpi
 %endif
-%if %{build_mpi}
-BuildRequires:  openmpi
-BuildRequires:  openmpi-devel
-%endif
-BuildRequires:  desktop-file-utils
-BuildRequires:  doxygen
-BuildRequires:  gnuplot
+BuildRequires:	desktop-file-utils
+BuildRequires:	doxygen
+BuildRequires:	gnuplot
 BuildRequires:	wget
-BuildRequires:  expat-devel
-BuildRequires:  freetype-devel
-BuildRequires:  GL-devel
+BuildRequires:	expat-devel
+BuildRequires:	freetype-devel
+BuildRequires:	GL-devel
 BuildRequires:	libxt-devel
-BuildRequires:  graphviz
-BuildRequires:  hdf5-devel
-BuildRequires:  imagemagick
-BuildRequires:  libtiff-devel
-BuildRequires:  python-devel
-BuildRequires:  qt4-devel
-BuildRequires:  qt4-assistant
-BuildRequires:  readline-devel
-BuildRequires:  tk-devel
-BuildRequires:  zlib-devel
-Requires:       %{name}-data = %{version}-%{release}
-Requires:       qt-assistant-adp
+BuildRequires:	graphviz
+BuildRequires:	hdf5-devel
+BuildRequires:	imagemagick
+BuildRequires:	libtiff-devel
+BuildRequires:	python-devel
+BuildRequires:	qt4-devel
+BuildRequires:	qt4-assistant
+BuildRequires:	readline-devel
+BuildRequires:	tk-devel
+BuildRequires:	zlib-devel
+Requires:	%{name}-data = %{version}-%{release}
+Requires:	qt-assistant-adp
 Requires:	qt4-database-plugin-sqlite
 %ifarch %x86_64
-Requires:   lib64hdf5_0
+Requires:	lib64hdf5_0
 %endif
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
@@ -92,146 +80,229 @@ has a user interface written using a unique blend of Tcl/Tk and C++.
 
 NOTE: This version has NOT been compiled with MPI support.
 
+%files
+%defattr(-,root,root,-)
+%doc License_v1.2.txt
+%{_sysconfdir}/ld.so.conf.d/paraview-%{_arch}.conf
+%{_bindir}/paraview
+%{_bindir}/pvbatch
+%{_bindir}/pvblot
+%{_bindir}/pvdataserver
+%{_bindir}/pvpython
+%{_bindir}/pvrenderserver
+%{_bindir}/pvserver
+%{_bindir}/smTestDriver
+%{_datadir}/applications/%{name}.desktop
+%{_libdir}/%{namever}
+%{_libdir}/paraview
+%{py_platsitedir}/paraview.pth
+%exclude %{_libdir}/%{namever}/*.cmake
+%exclude %{_libdir}/%{namever}/libCosmo.so
+%exclude %{_libdir}/%{namever}/libMapReduceMPI.so
+%exclude %{_libdir}/%{namever}/libQVTK.so
+%exclude %{_libdir}/%{namever}/libVPIC.so
+%exclude %{_libdir}/%{namever}/libvtkalglib.so
+%exclude %{_libdir}/%{namever}/libvtkChartsPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkCharts.so
+%exclude %{_libdir}/%{namever}/libvtkCommonPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkCommon.so
+%exclude %{_libdir}/%{namever}/libvtkDICOMParser.so
+%exclude %{_libdir}/%{namever}/libvtkexoIIc.so
+%exclude %{_libdir}/%{namever}/libvtkFilteringPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkFiltering.so
+%exclude %{_libdir}/%{namever}/libvtkftgl.so
+%exclude %{_libdir}/%{namever}/libvtkGenericFilteringPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkGenericFiltering.so
+%exclude %{_libdir}/%{namever}/libvtkGeovisPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkGeovis.so
+%exclude %{_libdir}/%{namever}/libvtkGraphicsPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkHybridPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkHybrid.so
+%exclude %{_libdir}/%{namever}/libvtkImagingPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkImaging.so
+%exclude %{_libdir}/%{namever}/libvtkInfovisPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkInfovis.so
+%exclude %{_libdir}/%{namever}/libvtkIOPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkIO.so
+%exclude %{_libdir}/%{namever}/libvtkmetaio.so
+%exclude %{_libdir}/%{namever}/libvtkNetCDF.so
+%exclude %{_libdir}/%{namever}/libvtkParallelPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkParallel.so
+%exclude %{_libdir}/%{namever}/libvtkproj4.so
+%exclude %{_libdir}/%{namever}/libvtkPythonCore.so
+%exclude %{_libdir}/%{namever}/libvtkRenderingPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkRendering.so
+%exclude %{_libdir}/%{namever}/libvtksqlite.so
+%exclude %{_libdir}/%{namever}/libvtksys.so
+%exclude %{_libdir}/%{namever}/libvtkverdict.so
+%exclude %{_libdir}/%{namever}/libvtkViewsPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkViews.so
+%exclude %{_libdir}/%{namever}/libvtkVolumeRenderingPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkVolumeRendering.so
+%exclude %{_libdir}/%{namever}/libvtkWidgetsPythonD.so
+%exclude %{_libdir}/%{namever}/libvtkWidgets.so
+%exclude %{_libdir}/%{namever}/CMake
+%doc %{_docdir}/%{namever}
+%doc %{_mandir}/man3/*.3*
 
-%if %{build_mpi}
-%package        mpi
-Summary:        Parallel visualization application
-Group:          Sciences/Other
-Requires:       %{name}-data = %{version}-%{release}
-Provides:       %{name}
-Requires(post):   desktop-file-utils
-Requires(postun): desktop-file-utils
-
-%description    mpi
-ParaView is an application designed with the need to visualize large
-data sets in mind. The goals of the ParaView project include the
-following:
-
-    * Develop an open-source, multi-platform visualization
-      application.
-
-    * Support distributed computation models to process large data
-      sets.
-
-    * Create an open, flexible, and intuitive user interface.
-
-    * Develop an extensible architecture based on open standards.
-
-ParaView runs on distributed and shared memory parallel as well as
-single processor systems. Under the hood, ParaView uses the
-Visualization Toolkit as the data processing and rendering engine and
-has a user interface written using a unique blend of Tcl/Tk and C++.
-
-NOTE: This version has been compiled with OpenMPI support and requires
-an operating OpenMPI runtime enviroment.
+#-----------------------------------------------------------------------
+%package	devel
+Summary:	Development files for ParaView
+Group:		Sciences/Other
+Requires:	%{name} = %{version}-%{release}
+Requires:	python-vtk
+%if %{with mpi}
+%rename		paraview-devel-mpi
 %endif
 
+%description	devel
+%{summary}.
+
+%files		devel
+%defattr(-,root,root,-)
+%{_bindir}/kwProcessXML
+%{_includedir}/%{namever}
+%{_includedir}/paraview
+%{_libdir}/%{namever}/*.cmake
+%{_libdir}/%{namever}/libCosmo.so
+%{_libdir}/%{namever}/libMapReduceMPI.so
+%{_libdir}/%{namever}/libQVTK.so
+%{_libdir}/%{namever}/libVPIC.so
+%{_libdir}/%{namever}/libvtkalglib.so
+%{_libdir}/%{namever}/libvtkChartsPythonD.so
+%{_libdir}/%{namever}/libvtkCharts.so
+%{_libdir}/%{namever}/libvtkCommonPythonD.so
+%{_libdir}/%{namever}/libvtkCommon.so
+%{_libdir}/%{namever}/libvtkDICOMParser.so
+%{_libdir}/%{namever}/libvtkexoIIc.so
+%{_libdir}/%{namever}/libvtkFilteringPythonD.so
+%{_libdir}/%{namever}/libvtkFiltering.so
+%{_libdir}/%{namever}/libvtkftgl.so
+%{_libdir}/%{namever}/libvtkGenericFilteringPythonD.so
+%{_libdir}/%{namever}/libvtkGenericFiltering.so
+%{_libdir}/%{namever}/libvtkGeovisPythonD.so
+%{_libdir}/%{namever}/libvtkGeovis.so
+%{_libdir}/%{namever}/libvtkGraphicsPythonD.so
+%{_libdir}/%{namever}/libvtkHybridPythonD.so
+%{_libdir}/%{namever}/libvtkHybrid.so
+%{_libdir}/%{namever}/libvtkImagingPythonD.so
+%{_libdir}/%{namever}/libvtkImaging.so
+%{_libdir}/%{namever}/libvtkInfovisPythonD.so
+%{_libdir}/%{namever}/libvtkInfovis.so
+%{_libdir}/%{namever}/libvtkIOPythonD.so
+%{_libdir}/%{namever}/libvtkIO.so
+%{_libdir}/%{namever}/libvtkmetaio.so
+%{_libdir}/%{namever}/libvtkNetCDF.so
+%{_libdir}/%{namever}/libvtkParallelPythonD.so
+%{_libdir}/%{namever}/libvtkParallel.so
+%{_libdir}/%{namever}/libvtkproj4.so
+%{_libdir}/%{namever}/libvtkPythonCore.so
+%{_libdir}/%{namever}/libvtkRenderingPythonD.so
+%{_libdir}/%{namever}/libvtkRendering.so
+%{_libdir}/%{namever}/libvtksqlite.so
+%{_libdir}/%{namever}/libvtksys.so
+%{_libdir}/%{namever}/libvtkverdict.so
+%{_libdir}/%{namever}/libvtkViewsPythonD.so
+%{_libdir}/%{namever}/libvtkViews.so
+%{_libdir}/%{namever}/libvtkVolumeRenderingPythonD.so
+%{_libdir}/%{namever}/libvtkVolumeRendering.so
+%{_libdir}/%{namever}/libvtkWidgetsPythonD.so
+%{_libdir}/%{namever}/libvtkWidgets.so
+%{_libdir}/%{namever}/CMake
+
+#-----------------------------------------------------------------------
 %package        data
 Summary:        Data files for ParaView
 Group:          Sciences/Other
-Requires:       %{name} = %{version}-%{release}
 Requires(post):   desktop-file-utils
 Requires(postun): desktop-file-utils
 
 %description    data
 %{summary}.
 
+%files		data
+%defattr(-,root,root,-)
+%{_iconsdir}/paraview.png
+%{_liconsdir}/paraview.png
+%{_miconsdir}/paraview.png
+%{_datadir}/mime/packages/paraview.xml
+%{_datadir}/%{namever}
+%{_datadir}/paraview
 
+#-----------------------------------------------------------------------
 %prep
-%setup -q -n ParaView-%{version}
-%patch0 -p0 -b .link
-%patch1 -p1 -b .include
-%patch2 -p1 -b .gcc46
-%patch5 -p1 -b .demo
-%patch7 -p1 -b .hdf5
+%setup -q -n ParaView-%{version} -a1
+mv ParaViewData-%{version}/* .
 
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+
+#-----------------------------------------------------------------------
 %build
-rm -rf paraviewbuild paraviewbuild-mpi
 export CC='gcc'
-export CXX='g++'
-export MAKE='make'
-export CFLAGS="%{optflags} -DH5_USE_16_API"
-export CXXFLAGS="%{optflags} -DH5_USE_16_API"
-export QT_QMAKE_EXECUTABLE=%{qt_dir}/bin/qmake
-%cmake \
-    -DPV_INSTALL_LIB_DIR:PATH=/%{_lib}/paraview \
-    -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
-    -DCMAKE_CXX_COMPILER:FILEPATH=$CXX \
-    -DCMAKE_C_COMPILER:FILEPATH=$CC \
-    -DCMAKE_CXX_FLAGS="%{optflags}" \
-    -DTCL_LIBRARY:PATH=tcl \
-    -DTK_LIBRARY:PATH=tk \
-    -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
-    -DPARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF \
-    -DPARAVIEW_USE_SYSTEM_HDF5:BOOL=ON \
-    -DPYTHON_INCLUDE_PATH:PATH=%{python_include_path} \
-    -DPYTHON_LIBRARY:FILEPATH=%{python_library} \
-    -DQT_QMAKE_EXECUTABLE:FILEPATH=$QT_QMAKE_EXECUTABLE \
-    -DQT_INCLUDE_DIR:FILEPATH=%{qt_dir}/include \
-    -DQT_MOC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/moc \
-    -DQT_UIC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/uic \
-    -DVTK_INSTALL_QT_PLUGIN_DIR:STRING=%{qt_designer_plugins_dir} \
-    -DVTK_OPENGL_HAS_OSMESA:BOOL=OFF \
-    -DVTK_USE_INFOVIS:BOOL=OFF \
-    -DVTK_USE_SYSTEM_EXPAT:BOOL=ON \
-    -DVTK_USE_SYSTEM_FREETYPE:BOOL=ON \
-    -DVTK_USE_SYSTEM_JPEG:BOOL=ON \
-    -DVTK_USE_SYSTEM_PNG:BOOL=ON \
-    -DVTK_USE_SYSTEM_TIFF:BOOL=ON \
-    -DVTK_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DBUILD_DOCUMENTATION:BOOL=ON \
-    -DBUILD_EXAMPLES:BOOL=ON \
-    -DGLXEXT_LEGACY:BOOL=ON
-%make
-cd ..
-mv build paraviewbuild
-
-%if %{build_mpi}
-export CC='gcc'
+%if %{with mpi}
 export CXX='mpic++'
+%else
+export CXX='g++'
+%endif
 export MAKE='make'
 export CFLAGS="%{optflags} -DH5_USE_16_API"
 export CXXFLAGS="%{optflags} -DH5_USE_16_API"
-%cmake \
-    -DPV_INSTALL_LIB_DIR:PATH=/%{_lib}/paraview-mpi \
-    -DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
-    -DCMAKE_CXX_COMPILER:FILEPATH=$CXX \
-    -DCMAKE_C_COMPILER:FILEPATH=$CC \
-    -DCMAKE_CXX_FLAGS="%{optflags}" \
-    -DTCL_LIBRARY:PATH=tcl \
-    -DTK_LIBRARY:PATH=tk \
-    -DPARAVIEW_ENABLE_PYTHON:BOOL=ON \
-    -DPARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF \
-    -DPARAVIEW_USE_SYSTEM_HDF5:BOOL=ON \
-    -DPYTHON_INCLUDE_PATH:PATH=%{python_include_path} \
-    -DPYTHON_LIBRARY:FILEPATH=%{python_library} \
-    -DQT_QMAKE_EXECUTABLE:FILEPATH=$QT_QMAKE_EXECUTABLE \
-    -DQT_INCLUDE_DIR:FILEPATH=%{qt_dir}/include \
-    -DQT_MOC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/moc \
-    -DQT_UIC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/uic \
-    -DVTK_INSTALL_QT_PLUGIN_DIR:STRING=%{qt_designer_plugins_dir} \
-    -DICET_BUILD_TESTING:BOOL=ON \
-    -DVTK_USE_MPI:BOOL=ON \
-    -DMPI_INCLUDE_PATH:PATH="%{_includedir}/openmpi" \
-    -DMPI_LIBRARY:STRING="-L%{_libdir}/openmpi" \
-    -DVTK_OPENGL_HAS_OSMESA:BOOL=OFF \
-    -DVTK_USE_INFOVIS:BOOL=OFF \
-    -DVTK_USE_SYSTEM_EXPAT:BOOL=ON \
-    -DVTK_USE_SYSTEM_FREETYPE:BOOL=ON \
-    -DVTK_USE_SYSTEM_JPEG:BOOL=ON \
-    -DVTK_USE_SYSTEM_PNG:BOOL=ON \
-    -DVTK_USE_SYSTEM_TIFF:BOOL=ON \
-    -DVTK_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DBUILD_DOCUMENTATION:BOOL=ON \
-    -DBUILD_EXAMPLES:BOOL=ON \
-    -DGLXEXT_LEGACY:BOOL=ON
-%make
-cd ..
-mv build paraviewbuild-mpi
+# Do not use any option not available to "ccmake .." (using "t" to toggle
+# advanced options allowed) or it will not respect at least thne
+# PARAVIEW_INSTALL_DEVELOPMENT option.
+# Most commonly one wants to customize the PV_INSTALL_XXX_DIR options
+# but that does not work (it ignores and uses /usr/local); just move files
+# around after they are installed, search&replace installed file contents,
+# etc.
+%cmake									\
+	-DBUILD_DOCUMENTATION:BOOL=ON					\
+	-DBUILD_EXAMPLES:BOOL=ON					\
+	-DBUILD_TESTING:BOOL=OFF					\
+	-DCMAKE_CXX_COMPILER=:FILEPATH=$CXX				\
+	-DCMAKE_CXX_FLAGS="%{optflags}"					\
+	-DCMAKE_C_COMPILER:FILEPATH=$CC					\
+	-DCMAKE_C_FLAGS="%{optflags}"					\
+	-DPARAVIEW_DATA_ROOT:PATH=%{_datadir}				\
+	-DPARAVIEW_BUILD_QT_GUI:BOOL=ON					\
+	-DPARAVIEW_ENABLE_PYTHON:BOOL=ON				\
+	-DPARAVIEW_INSTALL_DEVELOPMENT:BOOL=ON				\
+	-DPARAVIEW_INSTALL_THIRD_PARTY_LIBRARIES:BOOL=OFF		\
+%if %{with mpi}
+	-DPARAVIEW_USE_MPI:BOOL=ON					\
+%else
+	-DPARAVIEW_USE_MPI:BOOL=OFF					\
 %endif
+	-DPYTHON_INCLUDE_PATH:PATH=%{python_include_path}		\
+	-DPYTHON_LIBRARY:FILEPATH=%{python_library}			\
+	-DQT_INCLUDE_DIR:FILEPATH=%{qt_dir}/include			\
+	-DQT_MOC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/moc			\
+	-DQT_QMAKE_EXECUTABLE:FILEPATH=%{qt_dir}/bin/qmake		\
+	-DQT_UIC_EXECUTABLE:FILEPATH=%{qt_dir}/bin/uic			\
+	-DQT_UIC3_EXECUTABLE:FILEPATH=%{qt_dir}/bin/uic3		\
+	-DTCL_LIBRARY:PATH=tcl						\
+	-DTK_LIBRARY:PATH=tk						\
+	-DVTK_INSTALL_QT_PLUGIN_DIR:STRING=%{qt_designer_plugins_dir}	\
+	-DVTK_OPENGL_HAS_OSMESA:BOOL=OFF				\
+	-DVTK_USE_INFOVIS:BOOL=OFF					\
+	-DVTK_USE_SYSTEM_EXPAT:BOOL=ON					\
+	-DVTK_USE_SYSTEM_FREETYPE:BOOL=ON				\
+	-DVTK_USE_SYSTEM_HDF5:BOOL=ON					\
+	-DVTK_USE_SYSTEM_JPEG:BOOL=ON					\
+	-DVTK_USE_SYSTEM_LIBXML2:BOOL=ON				\
+	-DVTK_USE_SYSTEM_PNG:BOOL=ON					\
+	-DVTK_USE_SYSTEM_TIFF:BOOL=ON					\
+	-DVTK_USE_SYSTEM_ZLIB:BOOL=ON
 
+# need to load protobuf libraries (also does not build with protobuf 2.4.1)
+# http://www.vtk.org/Bug/bug_relationship_graph.php?bug_id=12718&graph=dependency
+LD_LIBRARY_PATH=$PWD/bin \
+make -j2
+#%#make
+
+#-----------------------------------------------------------------------
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_bindir}
 
 # Fix permissions
@@ -251,70 +322,26 @@ convert paraview-logo.png -resize 48x48+0+0! -transparent white %{buildroot}%{_l
 convert paraview-logo.png -resize 32x32+0+0! -transparent white %{buildroot}%{_iconsdir}/paraview.png
 convert paraview-logo.png -resize 16x16+0+0! -transparent white %{buildroot}%{_miconsdir}/paraview.png
 
-
-%if %{build_mpi}
-# Install mpi version
-mv paraviewbuild-mpi build
 %makeinstall_std -C build
-mv build paraviewbuild-mpi
 
-mv %{buildroot}/%{_lib}/paraview-mpi/* %{buildroot}%{_libdir}/paraview-mpi
-rm -r %{buildroot}/%{_lib}/paraview-mpi
-
-# ld.conf.d file
-install -d %{buildroot}%{_sysconfdir}/ld.so.conf.d
-echo %{_libdir}/paraview-mpi > %{buildroot}%{_sysconfdir}/ld.so.conf.d/paraview-mpi-%{_arch}.conf
-
-# Python Path
-install -d %{buildroot}%{python_site_package}
-echo %{_libdir}/paraview-mpi > %{buildroot}%{python_site_package}/paraview-mpi.pth
-
-# Create desktop file
-cat > %{name}-mpi.desktop <<EOF
-[Desktop Entry]
-Name=ParaView Viewer MPI
-GenericName=ParaView Data Viewer
-Comment=ParaView allows MPI enabled viewing of large data sets
-Type=Application
-Terminal=false
-Icon=paraview
-MimeType=application/x-paraview;
-Categories=Graphics;Science;Math;Qt;
-Exec=mpirun C paraview-mpi
-EOF
-
-desktop-file-install --vendor="" \
-       --dir %{buildroot}%{_datadir}/applications/ \
-       %{name}-mpi.desktop
-
-# Move the mpi binaries, includes, and man pages out of the way
-pushd %{buildroot}/%{_bindir}
-for f in *
-do
-   mv $f ${f}-mpi
+# Patching build/Applications/ParaView/paraview-forward.c is not enough
+# just install the actual program to run in $PATH
+for bin in paraview pvbatch pvblot pvdataserver pvpython pvrenderserver pvserver smTestDriver; do
+    rm -f %{buildroot}%{_bindir}/$bin
+    ln -sf %{_libdir}/%{namever}/$bin %{buildroot}%{_bindir}/$bin
 done
-popd
-rm -rf %{buildroot}%{_mandir}
-
-# Remove mpi copy of documentation
-rm -rf %{buildroot}%{_datadir}/paraview/Documentation-mpi
-%endif
-
-# Install the normal version
-mv paraviewbuild build
-%makeinstall_std -C build
-mv build paraviewbuild
-
-mv %{buildroot}/%{_lib}/paraview/* %{buildroot}%{_libdir}/paraview
-rm -r %{buildroot}/%{_lib}/paraview
 
 # ld.conf.d file
 install -d %{buildroot}%{_sysconfdir}/ld.so.conf.d
 echo %{_libdir}/paraview > %{buildroot}%{_sysconfdir}/ld.so.conf.d/paraview-%{_arch}.conf
 
 # Python Path
-install -d %{buildroot}%{python_site_package}
-echo %{_libdir}/paraview > %{buildroot}%{python_site_package}/paraview.pth
+install -d %{buildroot}%{py_platsitedir}
+cat > %{buildroot}%{py_platsitedir}/paraview.pth << EOF
+%{_libdir}/%{namever}
+%{_libdir}/%{namever}/site-packages
+%{py_puresitedir}/vtk
+EOF
 
 # Create desktop file
 cat > %{name}.desktop <<EOF
@@ -330,50 +357,34 @@ Categories=Graphics;Science;Math;Qt;
 Exec=paraview
 EOF
 
-desktop-file-install --vendor="" \
-       --dir %{buildroot}%{_datadir}/applications/ \
-       %{name}.desktop
+desktop-file-install --vendor=""			\
+    --dir %{buildroot}%{_datadir}/applications/		\
+    %{name}.desktop
 
-%clean
-rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_datadir}/%{namever}
+cp -fpar Baseline Data %{buildroot}%{_datadir}/%{namever}
 
-%files
-%defattr(-,root,root,-)
-%doc License_v1.2.txt
-%{_sysconfdir}/ld.so.conf.d/paraview-%{_arch}.conf
-%{_bindir}/paraview
-%{_bindir}/pvbatch
-%{_bindir}/pvblot
-%{_bindir}/pvdataserver
-%{_bindir}/pvpython
-%{_bindir}/pvrenderserver
-%{_bindir}/pvserver
-%{_bindir}/smTestDriver
-%{_datadir}/applications/%{name}.desktop
-%{_libdir}/paraview
-%{python_site_package}/paraview.pth
-
-%if %{build_mpi}
-%files mpi
-%defattr(-,root,root,-)
-%doc License_v1.2.txt
-%{_sysconfdir}/ld.so.conf.d/paraview-mpi-%{_arch}.conf
-%{_bindir}/paraview-mpi
-%{_bindir}/pvbatch-mpi
-%{_bindir}/pvblot-mpi
-%{_bindir}/pvdataserver-mpi
-%{_bindir}/pvpython-mpi
-%{_bindir}/pvrenderserver-mpi
-%{_bindir}/pvserver-mpi
-%{_bindir}/smTestDriver-mpi
-%{_datadir}/applications/%{name}-mpi.desktop
-%{_libdir}/paraview-mpi
-%{python_site_package}/paraview-mpi.pth
+%ifarch x86_64 ppc64
+mv %{buildroot}%{_prefix}/lib/* %{buildroot}%{_libdir}
 %endif
 
-%files data
-%defattr(-,root,root,-)
-%{_iconsdir}/paraview.png
-%{_liconsdir}/paraview.png
-%{_miconsdir}/paraview.png
-%{_datadir}/mime/packages/paraview.xml
+# vtk-devel
+rm -f %{buildroot}%{_bindir}/vtkWrap*
+# vtk-test-suite
+rm -f %{buildroot}%{_bindir}/vtkEncodeString
+
+pushd %{buildroot}%{_prefix}
+    ln -sf %{namever} %{_lib}/paraview
+    %ifarch x86_64 ppc64
+    perl -pi -e 's|/lib/|/%{_lib}/|g;'			\
+	%{_lib}/%{namever}/*.cmake			\
+	%{_lib}/%{namever}/CMake/*.cmake
+    %endif
+    ln -sf %{namever} include/paraview
+    if [ -d share/doc/paraview ]; then
+	mv share/doc/paraview/* share/doc/%{namever}
+	rmdir share/doc/paraview
+    fi
+    ln -sf %{namever} share/doc/paraview
+    ln -sf %{namever} share/paraview
+popd
