@@ -1,0 +1,35 @@
+--- ParaView-3.12.0/Utilities/Xdmf2/vtk/CMakeLists.txt.orig	2011-11-18 23:59:38.448274827 -0200
++++ ParaView-3.12.0/Utilities/Xdmf2/vtk/CMakeLists.txt	2011-11-18 23:59:55.818361704 -0200
+@@ -101,9 +101,9 @@ IF (VTK_FOUND)
+ 
+   VTK_ADD_LIBRARY(vtkXdmf ${LIBTYPE} ${Xdmf_SRCS})
+   IF(VTK_USE_PARALLEL)
+-     TARGET_LINK_LIBRARIES(vtkXdmf vtkIO Xdmf vtkRendering vtkParallel)
++     TARGET_LINK_LIBRARIES(vtkXdmf vtkIO Xdmf vtkRendering vtkParallel ${X11_Xt_LIB})
+   ELSE(VTK_USE_PARALLEL)
+-    TARGET_LINK_LIBRARIES(vtkXdmf vtkIO Xdmf vtkRendering)
++    TARGET_LINK_LIBRARIES(vtkXdmf vtkIO Xdmf vtkRendering ${X11_Xt_LIB})
+   ENDIF(VTK_USE_PARALLEL)
+ 
+   IF (VTK_USE_MPI)
+--- ParaView-3.12.0/VTK/GUISupport/Qt/CMakeLists.txt.orig	2011-11-19 00:00:08.789426575 -0200
++++ ParaView-3.12.0/VTK/GUISupport/Qt/CMakeLists.txt	2011-11-19 00:00:22.706496204 -0200
+@@ -147,6 +147,7 @@ IF(VTK_LIBRARY_PROPERTIES)
+ ENDIF(VTK_LIBRARY_PROPERTIES)
+ 
+ TARGET_LINK_LIBRARIES(QVTK
++  ${X11_X11_LIB}
+   ${QT_LIBRARIES}
+   vtkRendering
+   vtkGraphics
+--- ParaView-3.12.0/VTK/Wrapping/Python/CMakeLists.txt.orig	2011-11-19 00:00:34.972557553 -0200
++++ ParaView-3.12.0/VTK/Wrapping/Python/CMakeLists.txt	2011-11-19 00:00:50.050632986 -0200
+@@ -21,7 +21,7 @@ ENDIF(VTK_WRAP_PYTHON_SIP)
+ INCLUDE_DIRECTORIES("${PYTHON_INCLUDE_PATH}")
+ 
+ VTK_ADD_LIBRARY(vtkPythonCore ${VTK_PYTHON_CORE_SRCS})
+-TARGET_LINK_LIBRARIES(vtkPythonCore vtkCommon)
++TARGET_LINK_LIBRARIES(vtkPythonCore vtkCommon ${PYTHON_LIBRARY})
+ IF(NOT VTK_INSTALL_NO_LIBRARIES)
+   INSTALL(TARGETS vtkPythonCore
+     EXPORT ${VTK_INSTALL_EXPORT_NAME}
