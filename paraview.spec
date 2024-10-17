@@ -16,7 +16,7 @@ Release:	%mkrel 1
 Summary:	Parallel visualization application
 Group:		Sciences/Other
 License:	BSD
-URL:		http://www.paraview.org/
+URL:		https://www.paraview.org/
 Source0:	http://www.paraview.org/files/v%{version}/ParaView-%{version}.tar.gz
 Source1:	http://paraview.org/files/v%{version}/ParaViewData-%{version}.zip
 Source2:	paraview.xml
